@@ -1,0 +1,86 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "managementGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the management group where the policy will be assigned"
+        }
+      },
+      "tagNames": {
+        "type": "array",
+        "defaultValue": ["Owner E-Mail", "CostCenter", "Project", "Environment"],
+        "metadata": {
+          "description": "Array of tag names to be enforced on resource groups"
+        }
+      }
+    },
+    "resources": [
+      {
+        "condition": "[greaterOrEquals(length(parameters('tagNames')), 1)]",
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2021-06-01",
+        "name": "req-rg-tag1",
+        "properties": {
+          "displayName": "[concat('Require Tag ', parameters('tagNames')[0], ' on RG')]",
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025",
+          "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]",
+          "parameters": {
+            "tagName": {
+              "value": "[parameters('tagNames')[0]]"
+            }
+          }
+        }
+      },
+      {
+        "condition": "[greaterOrEquals(length(parameters('tagNames')), 2)]",
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2021-06-01",
+        "name": "req-rg-tag2",
+        "properties": {
+          "displayName": "[concat('Require Tag ', parameters('tagNames')[1], ' on RG')]",
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025",
+          "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]",
+          "parameters": {
+            "tagName": {
+              "value": "[parameters('tagNames')[1]]"
+            }
+          }
+        }
+      },
+      {
+        "condition": "[greaterOrEquals(length(parameters('tagNames')), 3)]",
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2021-06-01",
+        "name": "req-rg-tag3",
+        "properties": {
+          "displayName": "[concat('Require Tag ', parameters('tagNames')[2], ' on RG')]",
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025",
+          "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]",
+          "parameters": {
+            "tagName": {
+              "value": "[parameters('tagNames')[2]]"
+            }
+          }
+        }
+      },
+      {
+        "condition": "[greaterOrEquals(length(parameters('tagNames')), 4)]",
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2021-06-01",
+        "name": "req-rg-tag4",
+        "properties": {
+          "displayName": "[concat('Require Tag ', parameters('tagNames')[3], ' on RG')]",
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025",
+          "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]",
+          "parameters": {
+            "tagName": {
+              "value": "[parameters('tagNames')[3]]"
+            }
+          }
+        }
+      }
+    ]
+  }
+  
