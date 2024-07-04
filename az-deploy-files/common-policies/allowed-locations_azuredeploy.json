@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "managementGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the management group where the policy will be assigned"
+      }
+    },
+    "allowedLocations": {
+      "type": "array",
+      "defaultValue": ["germanywestcentral","westeurope","northeurope"],
+      "metadata": {
+        "description": "Array of allowed locations for resource deployment. Possible values: eastus, eastus2, southcentralus, westus2, australiaeast, southeastasia, northeurope, swedencentral, uksouth, westeurope, centralus, southafricanorth, centralindia, eastasia, japaneast, koreacentral, canadacentral, francecentral, germanywestcentral, norwayeast, switzerlandnorth, uaenorth, brazilsouth."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/policyAssignments",
+      "apiVersion": "2021-06-01",
+      "name": "allowed-locations-policy",
+      "location": "[deployment().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "displayName": "[concat('Allowed locations for ', parameters('managementGroupName'))]",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
+        "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]",
+        "parameters": {
+          "listOfAllowedLocations": {
+            "value": "[parameters('allowedLocations')]"
+          }
+        }
+      }
+    }
+  ]
+}
