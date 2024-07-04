@@ -1,0 +1,206 @@
+// Not working
+
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "managementGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the management group where the policy will be assigned"
+      }{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "managementGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the management group where the policy will be assigned"
+      }
+    },
+    "tagNames": {
+      "type": "array",
+      "defaultValue": ["Owner E-Mail", "CostCenter", "Project", "Environment"],
+      "metadata": {
+        "description": "Array of tag names to be inherited from resource groups"
+      }
+    }
+  },
+  "resources": [
+    {
+      "condition": "[greaterOrEquals(length(parameters('tagNames')), 1)]",
+      "type": "Microsoft.Authorization/policyAssignments",
+      "apiVersion": "2021-06-01",
+      "name": "inh-tag-rg-1",
+      "location": "[deployment().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "displayName": "[concat('Inherit Tag ', parameters('tagNames')[0], ' from RG')]",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/ea3f2387-9b95-492a-a190-fcdc54f7b070",
+        "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]",
+        "parameters": {
+          "tagName": {
+            "value": "[parameters('tagNames')[0]]"
+          }
+        }
+      }
+    },
+    {
+      "condition": "[greaterOrEquals(length(parameters('tagNames')), 2)]",
+      "type": "Microsoft.Authorization/policyAssignments",
+      "apiVersion": "2021-06-01",
+      "name": "inh-tag-rg-2",
+      "location": "[deployment().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "displayName": "[concat('Inherit Tag ', parameters('tagNames')[1], ' from RG')]",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/ea3f2387-9b95-492a-a190-fcdc54f7b070",
+        "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]",
+        "parameters": {
+          "tagName": {
+            "value": "[parameters('tagNames')[1]]"
+          }
+        }
+      }
+    },
+    {
+      "condition": "[greaterOrEquals(length(parameters('tagNames')), 3)]",
+      "type": "Microsoft.Authorization/policyAssignments",
+      "apiVersion": "2021-06-01",
+      "name": "inh-tag-rg-3",
+      "location": "[deployment().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "displayName": "[concat('Inherit Tag ', parameters('tagNames')[2], ' from RG')]",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/ea3f2387-9b95-492a-a190-fcdc54f7b070",
+        "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]",
+        "parameters": {
+          "tagName": {
+            "value": "[parameters('tagNames')[2]]"
+          }
+        }
+      }
+    },
+    {
+      "condition": "[greaterOrEquals(length(parameters('tagNames')), 4)]",
+      "type": "Microsoft.Authorization/policyAssignments",
+      "apiVersion": "2021-06-01",
+      "name": "inh-tag-rg-4",
+      "location": "[deployment().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "displayName": "[concat('Inherit Tag ', parameters('tagNames')[3], ' on RG')]",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/ea3f2387-9b95-492a-a190-fcdc54f7b070",
+        "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]",
+        "parameters": {
+          "tagName": {
+            "value": "[parameters('tagNames')[3]]"
+          }
+        }
+      }
+    }
+  ]
+}
+
+    },
+    "tagNames": {
+      "type": "array",
+      "defaultValue": ["Owner E-Mail", "CostCenter", "Project", "Environment"],
+      "metadata": {
+        "description": "Array of tag names to be inherited from resource groups"
+      }
+    },
+    "allowedLocations": {
+      "type": "array",
+      "defaultValue": ["germanywestcentral","westeurope","northeurope"],
+      "metadata": {
+        "description": "Array of allowed locations for resource deployment. Possible values: eastus, eastus2, southcentralus, westus2, australiaeast, southeastasia, northeurope, swedencentral, uksouth, westeurope, centralus, southafricanorth, centralindia, eastasia, japaneast, koreacentral, canadacentral, francecentral, germanywestcentral, norwayeast, switzerlandnorth, uaenorth, brazilsouth."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2021-04-01",
+      "name": "requireRgTagDeployment",
+      "location": "[deployment().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/mschwrdtnr/azure-policy-playground/main/az-deploy-files/common-policies/require-rg-tag_azuredeploy.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "tagName": {
+            "value": "[parameters('tagNames')[0]]"
+          },
+          "managementGroupName": {
+            "value": "[parameters('managementGroupName')]"
+          }
+        }
+      },
+        "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2021-04-01",
+      "name": "inheritRgTagDeployment",
+      "location": "[deployment().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/mschwrdtnr/azure-policy-playground/main/az-deploy-files/common-policies/inherit-rg-tag_azuredeploy.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "tagName": {
+            "value": "[parameters('tagNames')[0]]"
+          },
+          "managementGroupName": {
+            "value": "[parameters('managementGroupName')]"
+          }
+        }
+      },
+        "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2021-04-01",
+      "name": "allowedLocationsDeployment",
+      "location": "[deployment().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/mschwrdtnr/azure-policy-playground/main/az-deploy-files/common-policies/allowed-locations_azuredeploy.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "allowedLocations": {
+            "value": "[parameters('allowedLocations')]"
+          },
+          "managementGroupName": {
+            "value": "[parameters('managementGroupName')]"
+          }
+        }
+      },
+        "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('managementGroupName'))]"
+    }
+  ]
+}
